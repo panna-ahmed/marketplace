@@ -1,10 +1,8 @@
-
-# Created by https://www.toptal.com/developers/gitignore/api/windows,nextjs,react
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,nextjs,react
-
 ### NextJS ###
 # Next build dir
 .next/
+
+.env.local
 
 ### react ###
 .DS_*
