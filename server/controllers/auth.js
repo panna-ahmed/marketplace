@@ -1,8 +1,37 @@
 import User from '../models/user';
 import { hashPassword, comparePassword } from '../utils/auth';
+import jwt from 'jsonwebtoken';
+import user from '../models/user';
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email) return res.status(400).send('Email is required');
+    if (!password) return res.status(400).send('Password is required');
+
+    let userExist = await User.findOne({ email }).exec();
+    if (!userExist) return res.status(400).send('Wrong Credential!');
+    const match = await comparePassword(password, userExist.password);
+    const token = jwt.sign({ _id: userExist._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
+
+    userExist.password = undefined;
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      //secure: true
+    });
+
+    res.json(userExist);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send('Try again');
+  }
+};
+
 export const register = async (req, res) => {
   try {
-    console.log(req.body);
     const { name, email, password } = req.body;
     if (!name) return res.status(400).send('Name is required');
     if (!password || password.length < 6)
