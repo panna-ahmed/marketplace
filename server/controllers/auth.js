@@ -1,7 +1,15 @@
 import User from '../models/user';
 import { hashPassword, comparePassword } from '../utils/auth';
 import jwt from 'jsonwebtoken';
-import user from '../models/user';
+
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie('token');
+    return res.json({ message: 'Signout success' });
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 export const login = async (req, res) => {
   try {
